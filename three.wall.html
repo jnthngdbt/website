@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="en"> 
+
+<head>
+	<meta charset="utf-8">
+</head>
+
+<body>
+	<script src="http://threejs.org/build/three.min.js"></script>
+	<!--
+	<script src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/js/controls/FirstPersonControls.js"></script>
+	<script src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/js/controls/FlyControls.js"></script>> 
+	-->
+	<script src="https://rawgit.com/mrdoob/three.js/dev/examples/js/controls/TrackballControls.js"></script>
+	
+	<script type="text/javascript">
+		
+	var scene, camera, light, renderer, controls;
+	var wall, lightball; // geometry, material;
+
+	var lightPosition = new THREE.Vector3(0.0, 0.0, 100.0);
+
+	init();
+	animate();
+
+	function init() {
+
+		"use strict";
+
+		// CONTAINER
+
+		// container = document.createElement( 'div' );
+		// document.body.appendChild( container );
+
+		// SCENE
+
+	    scene = new THREE.Scene();
+
+	    var hexcolor = 0xffffff; // Fog color.
+		var density = 0.00000025; // Defines how fast the fog will grow dense. Default is 0.00025.
+	    //scene.fog = new THREE.FogExp2( hexcolor, density );
+
+	    // CAMERA
+
+		var fov = 75; // Camera frustum vertical field of view (degs).
+		var aspect = window.innerWidth / window.innerHeight; // Camera frustum aspect ratio.
+		var near = 1; // Camera frustum near plane.
+		var far = 10000 // Camera frustum far plane.
+	    camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
+	    camera.position.z = 1000;
+
+		// OBJECTS
+
+	    var width = 2000;
+	    var height = 1500;
+	    var widthSegments = 100;
+	    var heightSegments = 100;
+
+	    wall = {};
+		wall.geometry = new THREE.PlaneGeometry(width, height, widthSegments, heightSegments),
+		wall.material = new THREE.MeshLambertMaterial( { color: 0xff0000 } ),
+	    wall.mesh = new THREE.Mesh( wall.geometry, wall.material );
+
+	    scene.add( wall.mesh );
+
+		lightball = {};
+		lightball.radius = 10;
+		lightball.geometry = new THREE.SphereGeometry(lightball.radius);
+		lightball.material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
+	    lightball.mesh = new THREE.Mesh( lightball.geometry, lightball.material );
+
+	    lightball.mesh.position.x = lightPosition.x;
+	    lightball.mesh.position.y = lightPosition.y;
+	    lightball.mesh.position.z = lightPosition.z;
+
+	    scene.add( lightball.mesh );
+
+	    // LIGHT
+
+	    var color = 0xffffff; // Numeric value of the RGB component of the color. 
+		var intensity = 1; // Numeric value of the light's strength/intensity. 
+		var distance = 0; // The distance of the light where the intensity is 0. 0: endless. 
+		var decay = 2; // The amount the light dims along the distance of the light.
+		light = new THREE.PointLight(color, intensity, distance, decay);
+
+		light.position.x = lightPosition.x;
+		light.position.y = lightPosition.y;
+		light.position.z = lightPosition.z;
+		scene.add( light );
+
+	    // RENDERER
+
+	    camera.lookAt(wall.mesh.position)
+
+	    renderer = new THREE.WebGLRenderer();
+	    renderer.setSize( window.innerWidth, window.innerHeight );
+	    renderer.setClearColor(0xdddddd)
+
+		// CONTROLS
+
+		controls = new THREE.TrackballControls( camera );
+		controls.rotateSpeed = 1.0;
+		controls.zoomSpeed = 1.2;
+		controls.panSpeed = 0.8;
+		controls.noZoom = false;
+		controls.noPan = false;
+		controls.staticMoving = true;
+		controls.dynamicDampingFactor = 0.3;
+		controls.keys = [ 65, 83, 68 ];
+	    controls.addEventListener( 'change', render );
+
+//		controls = new THREE.FirstPersonControls (camera);
+//		controls = new THREE.FlyControls( camera );
+//		controls.movementSpeed = 1000;
+		//controls.domElement = container;
+		// controls.rollSpeed = Math.PI / 24;
+		// controls.autoForward = false;
+		// controls.dragToLook = false;
+
+
+
+	    document.body.appendChild( renderer.domElement );
+	    ////container.appendChild(renderer)
+
+	}
+
+	function animate() {
+
+	    requestAnimationFrame( animate );
+	    controls.update();
+
+	    renderer.render(scene, camera);
+
+	    // mesh.rotation.x += 0.01;
+	    // mesh.rotation.y += 0.02;
+	}
+
+	function render() {
+		renderer.render( scene, camera );
+	}
+
+	</script>
+
+</body>
+
+</html>
