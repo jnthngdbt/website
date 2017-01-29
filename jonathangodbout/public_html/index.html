@@ -2,44 +2,86 @@
 <html>
 <head>
 
-<meta charset="UTF-8">
-<meta name="author" content="jnthngdbt">
-<meta name="keywords" content="jnthngdbt">
-<link href="https://fonts.googleapis.com/css?family=Russo+One" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="author" content="jnthngdbt">
+    <meta name="keywords" content="jnthngdbt">
+    <link href="https://fonts.googleapis.com/css?family=Russo+One" rel="stylesheet">
 
-<style>
-body {
-    font-family: 'Russo One';
-    -webkit-text-size-adjust: 100%;
-    background-color: rgb(255,255,255);
-}
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="js/three.min.js"></script>
 
-.content {
-    background: rgba(200,200,200,.5);
-    color: rgb(128,128,128);
-    text-align: center;
-    padding: 60px 0;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    width: 100%;
-    text-decoration:none;
-}
+    <style>
+    body {
+        font-family: 'Russo One';
+        -webkit-text-size-adjust: 100%;
+        background-color: rgb(255,255,255);
+    }
 
-h1 {
-    font-size: 300px;
-    font-weight: 400;
-    text-transform: uppercase;
-    margin: 30px 0 0;
-}
-</style>
+    .content {
+        background: rgba(200,200,200,.5);
+        color: rgb(128,128,128);
+        text-align: center;
+        padding: 60px 0;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        width: 100%;
+        text-decoration:none;
+    }
+
+    h1 {
+        font-size: 300px;
+        font-weight: 400;
+        text-transform: uppercase;
+        margin: 30px 0 0;
+    }
+    </style>
 
 </head>
 
 <body>
+
     <a href="https://jonathangodbout.bandcamp.com/releases" class="content">
         <h1>BOOM</h1>
     </a>
+
+    <!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
+    <script src="js/three.min.js"></script>
+
+    <script type="text/javascript">
+        
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+            var renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );
+            renderer.setClearColor( 0xffffff, 0);
+
+            var geometry = new THREE.BoxGeometry( 4, 4, 4);
+            var material = new THREE.MeshBasicMaterial( { 
+                color: 0x666666,
+                wireframe: true } );
+            var cube = new THREE.Mesh( geometry, material );
+            scene.add( cube );
+
+            camera.position.z = 5;
+
+            var render = function () {
+                requestAnimationFrame( render );
+
+                cube.rotation.x += 0.003;
+                cube.rotation.y += 0.003;
+
+                renderer.render(scene, camera);
+            };
+
+            render();
+    </script>
+
+
+
+
 </body>
 </html>
