@@ -51,18 +51,24 @@
 
     <script type="text/javascript">
         
+            'use strict';
+
             var scene = new THREE.Scene();
             var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 
-            var renderer = new THREE.WebGLRenderer({ alpha: true });
+            var renderer = new THREE.WebGLRenderer({ 
+                alpha: true });
             renderer.setSize( window.innerWidth, window.innerHeight );
             document.body.appendChild( renderer.domElement );
             renderer.setClearColor( 0xffffff, 0);
 
-            var geometry = new THREE.BoxGeometry( 4, 4, 4);
+            var side = 0.006 * Math.min(window.innerWidth, window.innerHeight)
+
+            var geometry = new THREE.BoxGeometry( side, side, side);
             var material = new THREE.MeshBasicMaterial( { 
-                color: 0x666666,
-                wireframe: true } );
+                color: 0x888888,
+                wireframe: true,
+                wireframeLinewidth: 1 } );
             var cube = new THREE.Mesh( geometry, material );
             scene.add( cube );
 
