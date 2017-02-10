@@ -1,15 +1,11 @@
 "use strict";
 
-// Create the SVG.
+// SVG.
 
-var svgsize = 300;
-var width = svgsize;
-var height = svgsize;
-
-var svg = d3.select("body")
-    .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+var svg = d3.select("svg");
+var width = svg.attr("width");
+var height = svg.attr("height");
+var svgsize = width;
 
 // Constants and parameters.
 
