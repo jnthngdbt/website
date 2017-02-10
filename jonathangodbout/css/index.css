@@ -24,8 +24,7 @@ body {
 }
 
 a {
-    /*position: absolute;*/
-    text-decoration: none; /*no underline*/
+    text-decoration: none;
     color: rgb(128,128,128);
 }
 
@@ -38,4 +37,15 @@ canvas {
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+line {
+    stroke-width: 1;
+    stroke-opacity: 1.0;
+}
+
+svg {
+    position: absolute;
+    bottom: 1%;
+    right: 1%;
 }
