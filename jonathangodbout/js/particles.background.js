@@ -29,6 +29,11 @@ var material = new THREE.PointsMaterial( {
 
 var particles = new THREE.Points( geometry, material );
 
+// Initially, start the cloud out of the fog, so that we can
+// see something coming and grab the attention earliest possible.
+// In the render loop, reset the position to 0, in the fog.
+particles.position.z = 10;
+
 // //Attempt to correct alpha glitches.
 // //From recommandations https://github.com/mrdoob/three.js/issues/6461.
 // material.alphaTest = 0.2;
@@ -37,12 +42,18 @@ particles.material.depthWrite = false;
 
 // CAMERA
 
-var camera = new THREE.PerspectiveCamera( 75, width/height, 0.1, 1000 );
-camera.position.z = 30;
+
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+camera.position.z = 40;
 
 // SCENE
-
 var scene = new THREE.Scene();
+
+var cloudNear = camera.position.z-span/2;
+var fogNear = cloudNear-5;
+var fogFar = cloudNear+5;
+scene.fog = new THREE.Fog(0xffffff, fogNear, fogFar);
+
 scene.add( particles );
 
 // RENDERER
@@ -54,8 +65,6 @@ renderer.setClearColor(0xffffff, 1);
 document.body.appendChild( renderer.domElement );
 
 // ANIMATION
-
-render();
 
 var render = function () {
     requestAnimationFrame( render );
@@ -76,4 +85,6 @@ var render = function () {
 
     renderer.render(scene, camera);
 };
+
+render();
 
