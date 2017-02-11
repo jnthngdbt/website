@@ -39,11 +39,6 @@ canvas {
     right: 0;
 }
 
-line {
-    stroke-width: 1;
-    stroke-opacity: 1.0;
-}
-
 svg {
     position: absolute;
     bottom: 1%;
