@@ -20,10 +20,13 @@ f = 0.2;
 wwa = []
 for row in ww:
     for val in row:
-        a = int(255*val*f)
-        #i = int(255*(f*val + (1-f)))
-        i = int(255*f*val)
-        p = 255-i
+#        a = int(255*val*f)
+#        #i = int(255*(f*val + (1-f)))
+#        i = int(255*f*val)
+#        p = 255-i
+        p = int(255*val)
+        a = 255
+
         wwa.append((p,p,p, a))
 
 img.putdata(wwa)

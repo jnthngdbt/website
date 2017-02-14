@@ -22,8 +22,8 @@ var RandomCoord = d3.randomUniform(Pad, svgsize-Pad/2);
 var MaxMotion = 0.6;
 var RandomMotion = d3.randomUniform(-MaxMotion, MaxMotion);
 
-var PointColor = d3.rgb(255, 80, 255);
-var EdgeColor = d3.rgb(255, 140, 255);
+var PointColor = d3.rgb(192, 80, 255);
+var EdgeColor = d3.rgb(192, 140, 255);
 
 // Build the set of random points.
 

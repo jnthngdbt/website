@@ -1,5 +1,7 @@
 'use strict';
 
+var bgColor = 0xdddddd;
+
 // POINT CLOUD GEOMETRY
 
 var geometry = new THREE.Geometry();
@@ -18,10 +20,10 @@ for (var i = 0; i < numPoints; i++){
 var loader = new THREE.TextureLoader();
 var texture = loader.load( "assets/particle.alpha.png" );
 var material = new THREE.PointsMaterial( { 
-	color: 0xffffff, 
+	color: 0x333333, 
 	size: .2,
 	map: texture,
-	blending: THREE.MultiplyBlending, // smoother blend, since points are dark
+	blending: THREE.AdditiveBlending,
   	transparent: true
 } );
 
@@ -36,7 +38,7 @@ particles.position.z = 10;
 
 // //Attempt to correct alpha glitches.
 // //From recommandations https://github.com/mrdoob/three.js/issues/6461.
-// material.alphaTest = 0.2;
+//material.alphaTest = 0.5;
 // particles.renderOrder = 9999; // last
 particles.material.depthWrite = false;
 
@@ -52,7 +54,7 @@ var scene = new THREE.Scene();
 var cloudNear = camera.position.z-span/2;
 var fogNear = cloudNear-5;
 var fogFar = cloudNear+5;
-scene.fog = new THREE.Fog(0xffffff, fogNear, fogFar);
+scene.fog = new THREE.Fog(0x000000, fogNear, fogFar);
 
 scene.add( particles );
 
@@ -60,7 +62,7 @@ scene.add( particles );
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0xffffff, 1);
+renderer.setClearColor(bgColor, 1);
 
 document.body.appendChild( renderer.domElement );
 
