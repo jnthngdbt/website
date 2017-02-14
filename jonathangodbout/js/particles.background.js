@@ -34,7 +34,7 @@ var particles = new THREE.Points( geometry, material );
 // Initially, start the cloud out of the fog, so that we can
 // see something coming and grab the attention earliest possible.
 // In the render loop, reset the position to 0, in the fog.
-particles.position.z = 10;
+particles.position.z = 5;
 
 // //Attempt to correct alpha glitches.
 // //From recommandations https://github.com/mrdoob/three.js/issues/6461.
@@ -44,9 +44,8 @@ particles.material.depthWrite = false;
 
 // CAMERA
 
-
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-camera.position.z = 40;
+camera.position.z = 30;
 
 // SCENE
 var scene = new THREE.Scene();
