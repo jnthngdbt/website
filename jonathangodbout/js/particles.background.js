@@ -7,11 +7,14 @@ var bgColor = 0xdddddd;
 var geometry = new THREE.Geometry();
 
 var span = 20;
+var spanX = span*2;
+var spanY = span;
+var spanZ = span;
 var numPoints = 10000;
 for (var i = 0; i < numPoints; i++){
-	var x = Math.random() * span - span/2;
-	var y = Math.random() * span - span/2;
-	var z = Math.random() * span - span/2;
+	var x = Math.random() * spanX - spanX/2;
+	var y = Math.random() * spanY - spanY/2;
+	var z = Math.random() * spanZ - spanZ/2;
 	geometry.vertices.push(new THREE.Vector3(x,y,z));
 }
 
@@ -20,7 +23,7 @@ for (var i = 0; i < numPoints; i++){
 var loader = new THREE.TextureLoader();
 var texture = loader.load( "assets/particle.alpha.png" );
 var material = new THREE.PointsMaterial( { 
-	color: 0x333333, 
+	color: 0x333333, // mainly intensity controlling saturation
 	size: .2,
 	map: texture,
 	blending: THREE.AdditiveBlending,
@@ -50,7 +53,7 @@ camera.position.z = 30;
 // SCENE
 var scene = new THREE.Scene();
 
-var cloudNear = camera.position.z-span/2;
+var cloudNear = camera.position.z-spanZ/2;
 var fogNear = cloudNear-5;
 var fogFar = cloudNear+5;
 scene.fog = new THREE.Fog(0x000000, fogNear, fogFar);
@@ -70,12 +73,12 @@ document.body.appendChild( renderer.domElement );
 var render = function () {
     requestAnimationFrame( render );
 
-    // particles.rotation.x += 0.0005;
+    // particles.rotation.x += 0.001;
     // particles.rotation.y += 0.01;
     // particles.rotation.z += 0.01;
     particles.position.z += 0.02;
 
-    if (particles.position.z > (span/2 + camera.position.z)){
+    if (particles.position.z > (spanZ/2 + camera.position.z)){
     	particles.position.z = 0;
     }
 
