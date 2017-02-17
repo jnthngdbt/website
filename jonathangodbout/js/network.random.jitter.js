@@ -14,7 +14,7 @@ var UpdateIntervalMs = 100
 var NumPoints = 16;
 var NumEdges = NumPoints*(NumPoints-1)/2;
 
-var VertexSize = 8;
+var VertexSize = 3;
 
 var Pad = 4*VertexSize;
 var RandomCoord = d3.randomUniform(Pad, svgsize-Pad/2);
@@ -23,7 +23,9 @@ var MaxMotion = 0.6;
 var RandomMotion = d3.randomUniform(-MaxMotion, MaxMotion);
 
 var PointColor = d3.rgb(150, 0, 255);
-var EdgeColor = d3.rgb(150, 100, 255);
+var EdgeColor = d3.rgb(160, 160, 160);
+
+var EdgeWidth = 0.5;
 
 // Build the set of random points.
 
@@ -86,7 +88,8 @@ var DisplayEdges = function(edges){
      .attr("x2", function(d){ return d.x2; })
      .attr("y1", function(d){ return d.y1; })
      .attr("y2", function(d){ return d.y2; })
-     .style("stroke", EdgeColor);
+     .style("stroke", EdgeColor)
+     .style("stroke-width", EdgeWidth);
 
     // Enter (display new data).
     l.enter()
