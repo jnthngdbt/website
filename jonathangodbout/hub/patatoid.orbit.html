@@ -11,6 +11,12 @@
     <!-- Together with [...text-size-adjust] in CSS, avoids font rescaling when switching orientation -->
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
 
+	<style>
+		body {
+			margin: 0px;
+		}
+	</style>
+
 </head>
 
 <body>
@@ -98,6 +104,8 @@
 
     document.body.appendChild( renderer.domElement );
 
+    window.addEventListener( 'resize', onWindowResize, false );
+
     animate();
 
 	function animate() {
@@ -114,6 +122,13 @@
 
 	function render() {
 		renderer.render( scene, camera );
+	}
+
+	function onWindowResize() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		controls.handleResize();
 	}
 
 	</script>
