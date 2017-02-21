@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="author" content="jnthngdbt">
+    <meta name="keywords" content="jnthngdbt">
+
+    <!-- Together with [...text-size-adjust] in CSS, avoids font rescaling when switching orientation -->
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+</head>
+
+<body>
+	<script src="../js/three.min.js"></script>
+	<script src="https://rawgit.com/mrdoob/three.js/dev/examples/js/controls/TrackballControls.js"></script>
+
+	<script type="text/javascript">
+
+	"use strict";
+
+	// SCENE
+
+    var scene = new THREE.Scene();
+
+    // CAMERA
+
+	var aspect = window.innerWidth / window.innerHeight;
+    var camera = new THREE.PerspectiveCamera( 30, aspect, 0.1, 10000 );
+
+    camera.position.z = 10;
+
+	// OBJECTS
+
+	var radius = 2;
+	var deformFactor = 0.3;
+
+	var patatoid = {};
+	patatoid.geometry = new THREE.DodecahedronGeometry(radius, radius);
+	patatoid.material = new THREE.MeshPhongMaterial( { 
+		color: 0x888888, 
+		shading: THREE.FlatShading } );
+    patatoid.mesh = new THREE.Mesh( patatoid.geometry, patatoid.material );
+
+    var v = patatoid.geometry.vertices;
+    for (var i = 0; i < v.length; i++){
+    	var deform = deformFactor * Math.random();
+    	v[i].x += deform;
+    	v[i].y += deform;
+    	v[i].z += deform;
+    }
+	patatoid.geometry.verticesNeedUpdate
+
+    scene.add( patatoid.mesh );
+
+    // LIGHT
+
+	var intensity = 1;
+	var decay = 2;
+
+	var lights = [];
+
+	lights.push( new THREE.PointLight(0x66ff66, intensity, 0, decay) );
+	lights[0].position.x = 5;
+	lights[0].position.y = 5;
+	lights[0].position.z = 5;
+
+	scene.add( lights[0] );
+
+	lights.push( new THREE.PointLight(0xffaa66, intensity, 0, decay)) ;
+	lights[1].position.x = -5;
+	lights[1].position.y = -5;
+	lights[1].position.z = 5;
+
+	scene.add( lights[1] );
+
+	scene.add( new THREE.AmbientLight(0xbbbbbb) );
+
+    // RENDERER
+
+    camera.lookAt(patatoid.mesh.position)
+
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setClearColor(0xefefef)
+
+	// CONTROLS
+
+	var controls = new THREE.TrackballControls( camera );
+	controls.rotateSpeed = 1.0;
+	controls.zoomSpeed = 1.2;
+	controls.panSpeed = 0.8;
+	controls.minDistance = radius * (deformFactor + 1);
+	controls.maxDistance = 1000;
+    controls.addEventListener( 'change', render );
+
+    document.body.appendChild( renderer.domElement );
+
+    animate();
+
+	function animate() {
+
+	    requestAnimationFrame( animate );
+
+	    controls.update();
+
+	    renderer.render(scene, camera);
+
+	    patatoid.mesh.rotation.x += 0.0005;
+	    patatoid.mesh.rotation.y += 0.0005;
+	}
+
+	function render() {
+		renderer.render( scene, camera );
+	}
+
+	</script>
+
+</body>
+
+</html>
