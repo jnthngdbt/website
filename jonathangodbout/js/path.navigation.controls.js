@@ -60,21 +60,25 @@ function PathNavigationControls( camera, domElement ) {
 		this.end(event.screenX, event.screenY);
 	};
 
-	function touchstart( event ) {
-		var x = event.touches[ 0 ].pageX;
-		var y = event.touches[ 0 ].pageY;
+	this.touchstart = function( event ) {
+		var x = event.touches[ 0 ].screenX;
+		var y = event.touches[ 0 ].screenY;
 		this.start(x,y);
 	}
 
-	function touchmove( event ) {
-		var x = event.touches[ 0 ].pageX;
-		var y = event.touches[ 0 ].pageY;
+	this.touchmove = function( event ) {
+		// Avoid scrolling.
+		event.preventDefault();
+    	event.stopPropagation();
+    	
+		var x = event.touches[ 0 ].screenX;
+		var y = event.touches[ 0 ].screenY;
 		this.move(x,y);
 	}
 
-	function touchend( event ) {
-		var x = event.touches[ 0 ].pageX;
-		var y = event.touches[ 0 ].pageY;
+	this.touchend = function( event ) {
+		var x = event.touches[ 0 ].screenX;
+		var y = event.touches[ 0 ].screenY;
 		this.end(x,y);
 	}
 
