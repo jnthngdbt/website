@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>JNTHNGDBT - Patatoid orbit</title>
 
     <meta charset="UTF-8">
     <meta name="author" content="jnthngdbt">
     <meta name="keywords" content="jnthngdbt">
-
-    <title>JNTHNGDBT - Patatoid orbit</title>
 
     <!-- Together with [...text-size-adjust] in CSS, avoids font rescaling when switching orientation -->
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
@@ -16,16 +15,17 @@
 			margin: 0px;
 		}
 	</style>
-
 </head>
 
 <body>
-	<script src="../js/three.min.js"></script>
-	<script src="https://rawgit.com/mrdoob/three.js/dev/examples/js/controls/TrackballControls.js"></script>
-	<!-- <script src="https://rawgit.com/mrdoob/three.js/dev/examples/js/controls/FlyControls.js"></script> -->
+	<!-- THREE.js stuff (3D and controls) -->
+	<script src="../js/three.js/build/three.min.js"></script>
+	<script src="../js/three.js/examples/js/controls/TrackballControls.js"></script>
 
+	<!-- Custom stuff -->
 	<script type="text/javascript" src="../js/path.navigation.controls.js"></script>
 
+	<!-- Main script -->
 	<script type="text/javascript">
 
 	"use strict";
@@ -105,13 +105,6 @@
 	// controls.maxDistance = 1000000;
  //    controls.addEventListener( 'change', render );
 
-	// var controls = new THREE.FlyControls( camera );
-	// controls.movementSpeed = 1.0;
-	// controls.rollSpeed = 0.005;
-	// controls.dragToLook = false;
-	// controls.autoForward = false;
-	// controls.domElement = renderer.domElement;
-
 	var controls = new PathNavigationControls(camera);
 	controls.acceleration = 8.0;
 
@@ -159,5 +152,4 @@
 	</script>
 
 </body>
-
 </html>
