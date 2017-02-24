@@ -40,7 +40,7 @@ function PathNavigationControls( camera, domElement ) {
 		}		
 	}
 
-	this.end = function(x,y){
+	this.end = function(){
 		this.originX = 0;
 		this.originY = 0;
 		this.speed = 0;
@@ -57,7 +57,7 @@ function PathNavigationControls( camera, domElement ) {
 	};
 
 	this.mouseup = function( event ) {
-		this.end(event.screenX, event.screenY);
+		this.end();
 	};
 
 	this.touchstart = function( event ) {
@@ -70,16 +70,14 @@ function PathNavigationControls( camera, domElement ) {
 		// Avoid scrolling.
 		event.preventDefault();
     	event.stopPropagation();
-    	
+
 		var x = event.touches[ 0 ].screenX;
 		var y = event.touches[ 0 ].screenY;
 		this.move(x,y);
 	}
 
 	this.touchend = function( event ) {
-		var x = event.touches[ 0 ].screenX;
-		var y = event.touches[ 0 ].screenY;
-		this.end(x,y);
+		this.end();
 	}
 
 	function bind( scope, fn ) {
@@ -87,6 +85,11 @@ function PathNavigationControls( camera, domElement ) {
 			fn.apply( scope, arguments );
 		};
 	}
+
+	// This binding stuff is necessary with syntax
+	//    this.touchend = function( event ) 
+	// but should not be necessary with syntax
+	//    function touchend( event )
 
 	var _mousemove = bind( this, this.mousemove );
 	var _mousedown = bind( this, this.mousedown );
@@ -102,6 +105,7 @@ function PathNavigationControls( camera, domElement ) {
 
 	this.domElement.addEventListener( 'touchstart', _touchstart, false );
 	this.domElement.addEventListener( 'touchend', _touchend, false );
+	this.domElement.addEventListener( 'touchcancel', _touchend, false );
 	this.domElement.addEventListener( 'touchmove', _touchmove, false );
 
 }
