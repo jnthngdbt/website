@@ -1,7 +1,22 @@
 // "use strict";
 
-function PathNavigationControls( camera, domElement ) {
+function PathNavigationControls( camera, campath, pathpos, pathrot, domElement) {
+
+	// INPUTS
+	// (should validate these)
+
+
+	// HEY
+	// Cannot work with a line (object 3d), because there is no getPoint().
+	// Must get a curve, or a path, but now, the getPoint() returns in curve definition space.
+	// But doing line.position.set(x,y,z)/camera.position.set(x,y,z) should transform both
+
+	this.campos = camera.position.clone();
+	//this.camrot = camera.rotation.clone();
+	this.campath = campath;
 	this.camera = camera;
+
+	//this.camera.rotation += pathrot;
 
 	this.domElement = ( domElement !== undefined ) ? domElement : document;
 	if ( domElement ) this.domElement.setAttribute( 'tabindex', - 1 );
@@ -11,7 +26,7 @@ function PathNavigationControls( camera, domElement ) {
 	this.acceleration = 0.001;
 	this.displacement = 0;
 	this.speed = 0;
-	//this.lookX = 0;
+	this.isClosedPath = false;
 
     // INTERNAL
 
@@ -19,22 +34,65 @@ function PathNavigationControls( camera, domElement ) {
 	this.originX = 0;
 	this.originY = 0;
 
+	// TAKE FULL CONTROL OF THE CAMERA TRANSFORM
+	this.camera.updateMatrix();
+	this.camera.matrixAutoUpdate = false;
+
+	this.translateCamOnPath = new THREE.Matrix4();
+	this.rotatePath = new THREE.Matrix4();
+	this.translatePath = new THREE.Matrix4();
+
+	this.rotatePath.makeRotationFromEuler(
+		new THREE.Euler( 
+			pathrot.x,
+			pathrot.y,
+			pathrot.z,
+			'XYZ'));
+
+	this.translatePath.makeTranslation(
+		pathpos.x,
+		pathpos.y,
+		pathpos.z);
+
 	this.update = function(){
-		this.displacement += this.speed * this.acceleration;
+		this.displacement += this.speed;
+
+		if (this.isClosedPath){
+			if (this.displacement > 1.0) { this.displacement = 0.0; }
+			if (this.displacement < 0.0) { this.displacement = 1.0; }
+		} else {
+			this.displacement = Math.min(this.displacement, 1.0);
+			this.displacement = Math.max(this.displacement, 0.0);
+		}
+
+		var pos = this.campath.getPoint(this.displacement);
+		
+		if (this.displacement > 0.3) {debugger;}
+		//debugger;
+
+		this.translateCamOnPath.makeTranslation(
+			pos.x + this.campos.x, 
+			pos.y + this.campos.y, 
+			(pos.isVector2 ? 0.0 : pos.z) + this.campos.z);
+
+		this.camera.matrixWorld.identity();
+		this.camera.matrixWorld.premultiply(this.translateCamOnPath);
+		this.camera.matrixWorld.premultiply(this.rotatePath);
+		this.camera.matrixWorld.premultiply(this.translatePath);
+		//this.camera.matrixWorldNeedsUpdate = false;
+		// this.camera.matrixAutoUpdate = false;
 	}
 
 	this.start = function(x,y){
 		this.originX = x;
 		this.originY = y;
 		this.speed = 0;
-		//this.lookX = 0;
 		this.isDown = true;
 	}
 
 	this.move = function(x,y){
 		if (this.isDown) {
-			this.speed = y-this.originY 
-			//this.lookX += event.screenX-this.originX;
+			this.speed = (y-this.originY) * this.acceleration
 		} else {
 			this.speed = 0;
 		}		
@@ -44,7 +102,6 @@ function PathNavigationControls( camera, domElement ) {
 		this.originX = 0;
 		this.originY = 0;
 		this.speed = 0;
-		//this.lookX = 0;
 		this.isDown = false;	
 	}
 
