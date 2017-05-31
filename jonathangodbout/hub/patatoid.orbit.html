@@ -37,18 +37,17 @@
     // CAMERA
 
 	var aspect = window.innerWidth / window.innerHeight;
-    var camera = new THREE.PerspectiveCamera( 30, aspect, 1, 500000 );
-    scene.add(camera);
+    var camera = new THREE.PerspectiveCamera( 30, aspect, 1, 1000000 );
 
-	// OBJECT - PATATOID
+    // camera.position.z = 150000;
+
+	// OBJECTS
+
+	var radius = 20000;
+	var deformFactor = 0.06;
 
 	var patatoid = {};
-
-	patatoid.radius = 20000;
-	patatoid.deformFactor = 0.06;
-
-	patatoid.geometry = new THREE.DodecahedronGeometry(
-		patatoid.radius, 2);
+	patatoid.geometry = new THREE.DodecahedronGeometry(radius, 2);
 	patatoid.material = new THREE.MeshPhongMaterial( { 
 		color: 0x888888, 
 		shading: THREE.FlatShading } );
@@ -56,50 +55,14 @@
 
     var v = patatoid.geometry.vertices;
     for (var i = 0; i < v.length; i++){
-    	var deform = patatoid.deformFactor * Math.random() * patatoid.radius;
-    	v[i].x += Math.random() > 0.5 ? 10*deform : -10*deform;
+    	var deform = deformFactor * Math.random() * radius;
+    	v[i].x += Math.random() > 0.5 ? deform : -deform;
     	v[i].y += Math.random() > 0.5 ? deform : -deform;
     	v[i].z += Math.random() > 0.5 ? deform : -deform;
     }
 	patatoid.geometry.verticesNeedUpdate
 
     scene.add( patatoid.mesh );
-
-	// PATH
-
-	var campath = {};
-
-	campath.radius = patatoid.radius * 6.0;
-	campath.circum = 2.0 * Math.PI * campath.radius;
-	campath.minRadius = patatoid.radius * 1.3;
-
-	campath.curve = new THREE.EllipseCurve( // 2D
-		0,  0,            		// ax, aY
-		campath.radius, campath.radius,	// xRadius, yRadius
-		0,  2 * Math.PI,  		// aStartAngle, aEndAngle
-		false,            		// aClockwise
-		0);               		// aRotation
-
-	campath.center = new THREE.Vector3(0, 0, campath.radius-campath.minRadius)
-	campath.path = new THREE.Path( campath.curve.getPoints( 500 ) ); // 2D
-
-	campath.position = new THREE.Vector3(0.0, 0.0, campath.center.z);
-	campath.rotation = new THREE.Vector3(Math.PI/2, 0.0, 0.0);
-
-	campath.geometry = campath.path.createPointsGeometry( 500 ); // 3D
-	campath.material = new THREE.LineDashedMaterial( {
-		color: 0xcccccc,
-		linewidth: 5,
-		scale: 1,
-		dashSize: 0.1,
-		gapSize: 100,
-	} );
-
-	campath.object = new THREE.Line( campath.geometry, campath.material );
-	// campath.object.rotation.x = Math.PI/2;
-	// campath.object.position.z = campath.center.z;
-
-	//scene.add(campath.object);
 
     // LIGHT
 
@@ -126,6 +89,8 @@
 
     // RENDERER
 
+    camera.lookAt(patatoid.mesh.position)
+
     var renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setClearColor(0xefefef)
@@ -136,18 +101,18 @@
 	// controls.rotateSpeed = 1.0;
 	// controls.zoomSpeed = 0.2;
 	// controls.noPan = true;
-	// controls.minDistance = patatoid.radius * (patatoid.deformFactor + 1);
+	// controls.minDistance = radius * (deformFactor + 1);
 	// controls.maxDistance = 1000000;
  //    controls.addEventListener( 'change', render );
- //    camera.position.z = 10*patatoid.radius;
 
-	camera.position.y = 100000;
-	var controls = new PathNavigationControls(camera, campath.path, campath.position, campath.rotation);
-	controls.acceleration = 0.00001; //8.0;
-	controls.isClosedPath = true;
-	//camera.position.z = 100000; // TBM
+	var controls = new PathNavigationControls(camera);
+	controls.acceleration = 8.0;
 
-	//
+	// PATH
+
+	var pathRadius = radius * 6.0;
+	var pathCircum = 2.0 * Math.PI * pathRadius;
+	var pathMinRadius = radius * 1.3;
 
     document.body.appendChild( renderer.domElement );
 
@@ -155,33 +120,26 @@
 
     animate();
 
-    //
-
 	function animate() {
 
 	    requestAnimationFrame( animate );
 
 	    controls.update();
 
-	    // //// Deal with camera path from the controls.
-	    // var angle = controls.displacement/campath.circum * 2*Math.PI;
-	    // camera.position.x = campath.radius * Math.sin(angle);
-	    // camera.position.z = campath.radius * Math.cos(angle) + (campath.radius-campath.minRadius);
-	    camera.lookAt(new THREE.Vector3(0,123,-patatoid.radius));
+	    // path
+	    var angle = controls.displacement/pathCircum * 2*Math.PI;
+	    camera.position.x = pathRadius * Math.sin(angle);
+	    camera.position.z = pathRadius * Math.cos(angle) + (pathRadius-pathMinRadius);
+	    camera.lookAt(new THREE.Vector3(0,0,-radius));
 
-	    ////// camera.rotateY(0.00001 * Math.PI * controls.lookX);	
-		////// camera.rotation.x = -Math.PI/10.0;
-		//////camera.rotation.y = angle - 0.8*Math.PI/2.0;
+	    renderer.render(scene, camera);
 
-		// Slowly rotate the patatoid.
-	    //patatoid.mesh.rotation.x += 0.0005;
+	    patatoid.mesh.rotation.x += 0.0005;
 	    patatoid.mesh.rotation.y += 0.0005;
-
-	    render();
 	}
 
 	function render() {
-		renderer.render(scene, camera);
+		renderer.render( scene, camera );
 	}
 
 	function onWindowResize() {
