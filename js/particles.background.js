@@ -7,10 +7,10 @@ var bgColor = 0x222224;
 var geometry = new THREE.Geometry();
 
 var span = 20;
-var spanX = span*2;
+var spanX = span * 2.0;
 var spanY = span;
-var spanZ = span;
-var numPoints = 10000;
+var spanZ = span * 1.5; // deep enough for enough fly-through
+var numPoints = 20000;
 for (var i = 0; i < numPoints; i++){
 	var x = Math.random() * spanX - spanX/2;
 	var y = Math.random() * spanY - spanY/2;
@@ -30,21 +30,6 @@ var material = new THREE.PointsMaterial( {
   	transparent: true
 } );
 
-// PARTICLES
-
-var particles = new THREE.Points( geometry, material );
-
-// Initially, start the cloud out of the fog, so that we can
-// see something coming and grab the attention earliest possible.
-// In the render loop, reset the position to 0, in the fog.
-particles.position.z = 5;
-
-// //Attempt to correct alpha glitches.
-// //From recommandations https://github.com/mrdoob/three.js/issues/6461.
-//material.alphaTest = 0.5;
-// particles.renderOrder = 9999; // last
-particles.material.depthWrite = false;
-
 // CAMERA
 
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
@@ -53,11 +38,28 @@ camera.position.z = 30;
 // SCENE
 var scene = new THREE.Scene();
 
-var cloudNear = camera.position.z-spanZ/2;
-var fogNear = cloudNear-5;
-var fogFar = cloudNear+5;
+// FOG
+
+// The fog size is the distance from the camera to the end of the cloud.
+// So that when the cloud is at the end, it is completely fogged.
+var fogSize = camera.position.z - spanZ/2;
+
+var fogNear = 0;
+var fogFar = fogSize;
 scene.fog = new THREE.Fog(0x000000, fogNear, fogFar);
 
+// PARTICLES
+
+var particles = new THREE.Points( geometry, material );
+
+// Initially, start the cloud out of the fog, so that we can
+// see something coming and grab the attention earliest possible.
+particles.position.z = 0.4 * fogSize;
+
+// Correct alpha glitches.
+particles.material.depthWrite = false;
+
+// SET SCENE
 scene.add( particles );
 
 // RENDERER
@@ -73,13 +75,13 @@ document.body.appendChild( renderer.domElement );
 var render = function () {
     requestAnimationFrame( render );
 
-    // particles.rotation.x += 0.001;
-    // particles.rotation.y += 0.01;
-    // particles.rotation.z += 0.01;
+    // Move the cloud.
     particles.position.z += 0.02;
 
+    // Reset the cloud position when its rear when through the camera.
     if (particles.position.z > (spanZ/2 + camera.position.z)){
-    	particles.position.z = 0;
+        // Appear at the beginning of the fog, but not too far to see it quickly.
+    	particles.position.z = 0.2 * fogSize;
     }
 
     // Adapt to window resize.
