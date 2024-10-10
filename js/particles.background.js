@@ -1,6 +1,6 @@
 'use strict';
 
-var bgColor = 0xdddddd;
+var bgColor = 0x222224;
 
 // POINT CLOUD GEOMETRY
 

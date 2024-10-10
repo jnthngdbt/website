@@ -23,10 +23,10 @@ var MaxMotion = 0.6;
 var RandomMotion = d3.randomUniform(-MaxMotion, MaxMotion);
 
 var PointColor = d3.rgb(150, 0, 255);
-var EdgeColor = d3.rgb(160, 160, 160);
+var EdgeColor = d3.rgb(128, 128, 128);
 
 var EdgeWidth = 0.5;
-var EdgeOpacity = 0.4;
+var EdgeOpacity = 0.2;
 
 // Build the set of random points.
 
