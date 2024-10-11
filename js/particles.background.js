@@ -7,7 +7,7 @@ var bgColor = 0x222224;
 var geometry = new THREE.Geometry();
 
 var span = 20;
-var spanX = span * 2.0;
+var spanX = span;
 var spanY = span;
 var spanZ = span * 1.5; // deep enough for enough fly-through
 var numPoints = 20000;
@@ -24,7 +24,7 @@ var loader = new THREE.TextureLoader();
 var texture = loader.load( "assets/particle.alpha.png" );
 var material = new THREE.PointsMaterial( { 
 	color: 0x333333, // mainly intensity controlling saturation
-	size: .2,
+	size: .1,
 	map: texture,
 	blending: THREE.AdditiveBlending,
   	transparent: true
